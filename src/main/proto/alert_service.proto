@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package com.example.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.example.grpcclient";
+option java_outer_classname = "AlertClientProto";
+
+import "google/protobuf/empty.proto";
+message DeviceEvent {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  string data = 4;
+  bool status = 5;
+}
+
+message AlertRequest {
+  DeviceEvent event = 1;
+}
+
+
+message AlertResponse {
+  bool isAlert = 1;
+  string alertType = 2;     // Тип тревоги (например, WATERLEAK, SMOKE)
+  string message = 3;
+}
+
+service AlertBackend {
+  rpc ProcessEvent(AlertRequest) returns (AlertResponse);
+}
+
+service AlertClient {
+  rpc PublishAlert(AlertResponse) returns (google.protobuf.Empty);
+}
+
